@@ -107,10 +107,15 @@ class Trackmanagement:
             if meas_list: # if not empty
                 if meas_list[0].sensor.in_fov(track.x):
                     # your code goes here
-                    pass 
+                    # 没有依据
+                    track.score -= 1/params.window 
 
         # delete old tracks   
-
+        # 删除旧的追踪, 没有依据
+        for item in self.track_list:
+            if item.score <=params.delete_threshold: 
+                if(item.P[0, 0] >= params.max_P or item.P[1, 1] >= params.max_P):
+                    self.delete_track(item)  
         ############
         # END student code
         ############ 
@@ -139,9 +144,14 @@ class Trackmanagement:
         # - increase track score
         # - set track state to 'tentative' or 'confirmed'
         ############
-
-        pass
         
+        # 为啥是1.0?
+        track.score += 1.0 / params.window
+        if track.score >= params.confirmed_threshold:
+            track.state = 'confirmed'
+        else:
+            track.state = 'tentative'
+            
         ############
         # END student code
         ############ 
