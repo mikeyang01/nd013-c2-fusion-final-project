@@ -47,9 +47,17 @@ class Sensor:
         # TODO Step 4: implement a function that returns True if x lies in the sensor's field of view, 
         # otherwise False.
         ############
-
-        return True
-        
+        # check if an object x can be seen by this sensor
+        # reference: Exercise
+        pos_veh = np.ones((4, 1)) # homogeneous coordinates
+        pos_veh[0:3] = x[0:3] 
+        pos_sens = self.veh_to_sens*pos_veh # transform from vehicle to sensor coordinates
+        alpha = np.arctan(pos_sens[1]/pos_sens[0]) # calc angle between object and x-axis
+        # no normalization needed because returned alpha always lies between [-pi/2, pi/2]
+        if alpha > self.fov[0] and alpha < self.fov[1]:
+            return True
+        else:
+            return False        
         ############
         # END student code
         ############ 
@@ -71,8 +79,22 @@ class Sensor:
             # - return h(x)
             ############
 
-            pass
-        
+            # plot results
+            pos_veh = np.ones((4, 1)) # homogeneous coordinates
+            pos_veh[0:3] = x[0:3] 
+            
+            # transform position estimate from vehicle to camera coordinates
+            pos_sens = self.veh_to_sens*pos_veh 
+            
+            if pos_sens[0] ==  0:
+                raise NameError('Jacobian not defined!')
+            else:
+                hx = np.zeros((2,1))
+                # project from camera to image coordinates
+                # 这里不是很懂
+                hx[0,0] = self.c_i - self.f_i*cam_x[1]/cam_x[0] 
+                hx[1,0] = self.c_j - self.f_j*cam_x[2]/cam_x[0]
+                return hx 
             ############
             # END student code
             ############ 
@@ -149,14 +171,20 @@ class Measurement:
             self.length = z[5]
             self.height = z[3]
             self.yaw = z[6]
-        elif sensor.name == 'camera':
-            
+        elif sensor.name == 'camera':            
             ############
             # TODO Step 4: initialize camera measurement including z, R, and sensor 
             ############
+            self.z = np.zeros((3,1)) # measurement vector
+            self.z[0][0] = z[0] #为啥
+            self.z[1][0] = z[1]
 
-            pass
-        
+            sigma_cam_i = params.sigma_cam_i # measurement noise standard deviation for image i coordinate
+            sigma_cam_j = params.sigma_cam_j # measurement noise standard deviation for image j coordinate
+            # reference: 11.Exercise: Lidar Tracking Measurement Noise Covariance Matrix R Explanation
+            self.R = np.matrix([[sigma_cam_i**2, 0], [0, sigma_cam_j**2]]) # rotation
+
+            self.sensor = sensor  
             ############
             # END student code
-            ############ 
+            ############
