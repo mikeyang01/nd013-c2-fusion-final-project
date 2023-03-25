@@ -177,7 +177,7 @@ class Trackmanagement:
         # - increase track score
         # - set track state to 'tentative' or 'confirmed'
         ############        
-        track.score += 1.0 / params.window
+        track.score = track.score + 1.0 / params.window
         if track.score >= params.confirmed_threshold:
             track.state = 'confirmed'
         else:
