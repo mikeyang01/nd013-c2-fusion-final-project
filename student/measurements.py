@@ -9,7 +9,6 @@
 # https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013
 # ----------------------------------------------------------------------
 #
-
 # imports
 import numpy as np
 
@@ -27,7 +26,10 @@ class Sensor:
         self.name = name
         if name == 'lidar':
             self.dim_meas = 3
-            self.sens_to_veh = np.matrix(np.identity((4))) # transformation sensor to vehicle coordinates equals identity matrix because lidar detections are already in vehicle coordinates
+            
+            # transformation sensor to vehicle coordinates equals identity matrix because lidar detections are already in vehicle coordinates
+            self.sens_to_veh = np.matrix(np.identity((4))) 
+            
             self.fov = [-np.pi/2, np.pi/2] # angle of field of view in radians
         
         elif name == 'camera':
@@ -49,10 +51,17 @@ class Sensor:
         ############
         # check if an object x can be seen by this sensor
         # reference: Exercise
-        pos_veh = np.ones((4, 1)) # homogeneous coordinates
+        
+        # homogeneous coordinates      
+        pos_veh = np.ones((4, 1)) 
         pos_veh[0:3] = x[0:3] 
-        pos_sens = self.veh_to_sens*pos_veh # transform from vehicle to sensor coordinates
-        alpha = np.arctan(pos_sens[1]/pos_sens[0]) # calc angle between object and x-axis
+        
+        # transform from vehicle to sensor coordinates       
+        pos_sens = self.veh_to_sens*pos_veh 
+        
+        # calc angle between object and x-axis        
+        alpha = np.arctan(pos_sens[1]/pos_sens[0]) 
+        
         # no normalization needed because returned alpha always lies between [-pi/2, pi/2]
         if alpha > self.fov[0] and alpha < self.fov[1]:
             return True
@@ -69,8 +78,8 @@ class Sensor:
             pos_veh[0:3] = x[0:3] 
             pos_sens = self.veh_to_sens*pos_veh # transform from vehicle to lidar coordinates
             return pos_sens[0:3]
-        elif self.name == 'camera':
-            
+
+        elif self.name == 'camera':            
             ############
             # TODO Step 4: implement nonlinear camera measurement function h:
             # - transform position estimate from vehicle to camera coordinates
@@ -86,14 +95,15 @@ class Sensor:
             # transform position estimate from vehicle to camera coordinates
             pos_sens = self.veh_to_sens*pos_veh 
             
-            if pos_sens[0] ==  0:
-                raise NameError('Jacobian not defined!')
+            # check and print error message if dividing by zero
+            if pos_sens[0] == 0:
+                raise NameError('Jacobian not defined for x[0]=0!')
             else:
                 hx = np.zeros((2,1))
                 # project from camera to image coordinates
-                # 这里不是很懂
-                hx[0,0] = self.c_i - self.f_i*cam_x[1]/cam_x[0] 
-                hx[1,0] = self.c_j - self.f_j*cam_x[2]/cam_x[0]
+                # reference: Exercise
+                hx[0,0] = self.c_i - self.f_i*x[1]/x[0] 
+                hx[1,0] = self.c_j - self.f_j*x[2]/x[0]
                 return hx 
             ############
             # END student code
@@ -135,11 +145,11 @@ class Sensor:
         # generate new measurement from this sensor and add to measurement list
         ############
         # TODO Step 4: remove restriction to lidar in order to include camera as well
-        ############
-        
-        if self.name == 'lidar':
-            meas = Measurement(num_frame, z, self)
-            meas_list.append(meas)
+        ############        
+            
+        # if self.name == 'lidar':
+        meas = Measurement(num_frame, z, self)
+        meas_list.append(meas)
         return meas_list
         
         ############
@@ -176,13 +186,16 @@ class Measurement:
             # TODO Step 4: initialize camera measurement including z, R, and sensor 
             ############
             self.z = np.zeros((3,1)) # measurement vector
-            self.z[0][0] = z[0] #为啥
-            self.z[1][0] = z[1]
+            self.z[0] = z[0]
+            self.z[1] = z[1]
 
             sigma_cam_i = params.sigma_cam_i # measurement noise standard deviation for image i coordinate
             sigma_cam_j = params.sigma_cam_j # measurement noise standard deviation for image j coordinate
+
             # reference: 11.Exercise: Lidar Tracking Measurement Noise Covariance Matrix R Explanation
-            self.R = np.matrix([[sigma_cam_i**2, 0], [0, sigma_cam_j**2]]) # rotation
+            self.R = np.matrix([
+                [sigma_cam_i**2, 0], 
+                [0, sigma_cam_j**2]]) # rotation
 
             self.sensor = sensor  
             ############
