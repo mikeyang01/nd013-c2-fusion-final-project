@@ -236,11 +236,11 @@ while True:
                 print('predict track', track.id)
                 KF.predict(track)
                 track.set_t((cnt_frame - 1)*0.1) # save next timestamp
-                
-            # associate all lidar measurements to all tracks
+                            
+            print('# associate all lidar measurements to all tracks')
             association.associate_and_update(manager, meas_list_lidar, KF)
             
-            # associate all camera measurements to all tracks
+            print('# associate all camera measurements to all tracks')
             association.associate_and_update(manager, meas_list_cam, KF)
             
             # save results for evaluation

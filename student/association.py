@@ -129,12 +129,8 @@ class Association:
         H = meas.sensor.get_H(track.x)
         # get_hx is to calculate nonlinear measurement expectation value h(x)   
         # get_H is to calculate Jacobian H at current x from h(x), 雅可比行列式是坐标变换理论的基础之一
-        print(meas.z)
-        print(track.x)
-        gamma = meas.z - meas.sensor.get_hx(track.x)
-        #gamma = meas.z - H*track.x
-
-        S = H*track.P*H.transpose() + meas.R
+        gamma = KF.gamma(track, meas) #gamma = meas.z - H*track.x
+        S = KF.S(track, meas, H) #S = H*P*H.transpose() + R # covariance of residual       
         MHD = gamma.transpose()*np.linalg.inv(S)*gamma # Mahalanobis distance formula
         return MHD            
         ############

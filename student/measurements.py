@@ -77,6 +77,7 @@ class Sensor:
             pos_veh = np.ones((4, 1)) # homogeneous coordinates
             pos_veh[0:3] = x[0:3] 
             pos_sens = self.veh_to_sens*pos_veh # transform from vehicle to lidar coordinates
+            # 返回pos_sens数组的前三行，即表示Lidar位置的x、y和z坐标的数组，这是一个三行一列的数组。
             return pos_sens[0:3]
 
         elif self.name == 'camera':            
@@ -92,19 +93,20 @@ class Sensor:
             pos_veh = np.ones((4, 1)) # homogeneous coordinates
             pos_veh[0:3] = x[0:3] 
             
-            # transform position estimate from vehicle to camera coordinates
+            # transform position estimate from vehicle to camera coord
             pos_sens = self.veh_to_sens*pos_veh 
             
             # check and print error message if dividing by zero
             if pos_sens[0] == 0:
                 raise NameError('Jacobian not defined for x[0]=0!')
-            else:
-                hx = np.zeros((2,1))
-                # project from camera to image coordinates
-                # reference: Exercise
-                hx[0,0] = self.c_i - self.f_i*x[1]/x[0] 
-                hx[1,0] = self.c_j - self.f_j*x[2]/x[0]
-                return hx 
+            
+            hx = np.zeros((2,1))
+            # project from camera to image coord
+            # reference: Exercise
+            hx[0,0] = self.c_i - self.f_i*pos_sens[1]/pos_sens[0] 
+            hx[1,0] = self.c_j - self.f_j*pos_sens[2]/pos_sens[0]
+            # 返回hx数组，这是一个两行一列的数组，表示相机观测值的x和y坐标。
+            return hx 
             ############
             # END student code
             ############ 
@@ -147,7 +149,7 @@ class Sensor:
         # TODO Step 4: remove restriction to lidar in order to include camera as well
         ############        
             
-        # if self.name == 'lidar':
+        # if self.name == 'lidar' or self.name == 'camera':
         meas = Measurement(num_frame, z, self)
         meas_list.append(meas)
         return meas_list
@@ -184,8 +186,9 @@ class Measurement:
         elif sensor.name == 'camera':            
             ############
             # TODO Step 4: initialize camera measurement including z, R, and sensor 
-            ############
-            self.z = np.zeros((3,1)) # measurement vector
+            ############            
+            self.z = np.zeros((sensor.dim_meas,1))  
+            # print('sensor.dim_meas is' + str(sensor.dim_meas))
             self.z[0] = z[0]
             self.z[1] = z[1]
 
