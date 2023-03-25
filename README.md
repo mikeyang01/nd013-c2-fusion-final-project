@@ -129,5 +129,67 @@ Parts of this project are based on the following repositories:
 - [Complex-YOLO: Real-time 3D Object Detection on Point Clouds](https://github.com/maudzung/Complex-YOLOv4-Pytorch)
 
 
-## License
-[License](LICENSE.md)
+## Writeup: Final Project: Sensor Fusion and Object Tracking
+
+### Project Instructions Step 1
+The 1st step of this project is to implement an EKF to track a single real-world target with lidar measurement input over time.
+In file loop_over_dataset.py, I set the attributes for code execution in the following way:
+```
+training_segment-10072231702153043603_5725_000_5745_000_with_camera_labels.tfrecord
+show_only_frames = [150, 200]
+configs_det = det.load_configs(model_name='fpn_resnet')
+configs_det.lim_y = [-5, 10] 
+exec_tracking = ['perform_tracking']
+exec_visualization = ['show_tracks']
+```
+Result:
+The RMSE plot shows a mean RMSE of 0.28.
+<img src="img/rmse.png"/>
+<img src="img/result.png"/>
+
+
+### Project Instructions Step 2
+The 2nd step of this project is to implement the track management to initialize and delete tracks; then, set a track state and a track score.
+
+In file loop_over_dataset.py, I set the attributes for code execution in the following way:
+```
+training_segment-10072231702153043603_5725_000_5745_000_with_camera_labels.tfrecord
+show_only_frames = [65, 100]
+configs_det.lim_y = [-5, 15] 
+exec_tracking = ['perform_tracking']
+exec_visualization = ['show_tracks']
+```
+Result:
+There is one single track without track losses in between, so the RMSE plot showed a single line. 
+<img src="img/rmse_line.png"/>
+
+### Project Instructions Step 3
+The 3rd step of this project is to implement a single nearest neighbor data association to associate measurements to tracks. 
+
+In file loop_over_dataset.py, I set the attributes for code execution in the following way:
+```
+training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord
+show_only_frames = [0, 200]
+configs_det.lim_y = [-25, 25]
+```
+Result: 
+The association works properly, multiple tracks are updated with multiple measurements.
+<img src="img/multi_tracking_rmse.png"/>
+<img src="img/multi_tracking_result.png"/>
+
+### Project Instructions Step 4
+In Step 4 of the final project, I implemented the nonlinear camera measurement model. 
+
+In file loop_over_dataset.py, I set the attributes for code execution in the following way:
+```
+exec_visualization = ['show_tracks', 'make_tracking_movie']
+```
+Result:
+1. The tracking loop updated all tracks with lidar measurements, then with camera measurements. 
+2. The console output showed lidar updates followed by camera updates. 
+3. The visualization showed that the tracking performs well
+4. No confirmed ghost tracks or track losses occurred. 
+5. The RMSE plot showed three confirmed tracks. 
+6. The mean RMSE for these tracks were below 0.25.
+<img src="img/none_linear_rmse.png"/>
+<img src="img/none_linear_result.png"/>
