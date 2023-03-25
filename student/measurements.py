@@ -147,20 +147,17 @@ class Sensor:
         # generate new measurement from this sensor and add to measurement list
         ############
         # TODO Step 4: remove restriction to lidar in order to include camera as well
-        ############        
-            
+        ############                    
         # if self.name == 'lidar' or self.name == 'camera':
         meas = Measurement(num_frame, z, self)
         meas_list.append(meas)
-        return meas_list
-        
+        return meas_list        
         ############
         # END student code
         ############ 
         
         
-################### 
-        
+###################         
 class Measurement:
     '''Measurement class including measurement values, covariance, timestamp, sensor'''
     def __init__(self, num_frame, z, sensor):

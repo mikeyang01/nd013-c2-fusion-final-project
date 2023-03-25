@@ -40,7 +40,8 @@ class Track:
         #                 [ 0.        ],
         #                 [ 0.        ],
         #                 [ 0.        ]])
-        # self.P = np.matrix([[9.0e-02, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00],
+        # self.P = np.matrix([
+        #                 [9.0e-02, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00],
         #                 [0.0e+00, 9.0e-02, 0.0e+00, 0.0e+00, 0.0e+00, 0.0e+00],
         #                 [0.0e+00, 0.0e+00, 6.4e-03, 0.0e+00, 0.0e+00, 0.0e+00],
         #                 [0.0e+00, 0.0e+00, 0.0e+00, 2.5e+03, 0.0e+00, 0.0e+00],
@@ -134,16 +135,17 @@ class Trackmanagement:
                 if meas_list[0].sensor.in_fov(track.x):
                     # your code goes here
                     # decrease the track score for unassigned tracks
-                    # 这块不是很懂, 问老师
-                    track.state =  'tentative'
-                    if track.score > params.delete_threshold + 1:
-                        track.score = params.delete_threshold + 1
-                    track.score -= 1/params.window 
+                    print("track.score :" + str(track.score) + " params.window:" + str(params.window))
+                    track.score =track.score - 0.5/params.window 
+                    print("decreased score :", track.id, " : ", track.score)
 
         # delete old tracks, since vehicle is disappeared
-        # 这块不是很懂, 问老师
         for item in self.track_list:
-            if item.score <= params.delete_threshold: 
+            if item.score <= params.delete_threshold: # delete_threshold = 0.6 # track score threshold to delete confirmed tracks
+                # max_P = 3**2 # delete track if covariance of px or py bigger than this
+                # The overall estimation error covariance can then be initialized as:
+                # P0 = [Ppos, 0  ]
+                #      [0   ,Pvel]    
                 if(item.P[0, 0] >= params.max_P or item.P[1, 1] >= params.max_P):
                     self.delete_track(item)  
         ############
