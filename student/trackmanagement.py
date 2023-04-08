@@ -68,7 +68,7 @@ class Track:
         sigma_p44 = params.sigma_p44
         sigma_p55 = params.sigma_p55
         sigma_p66 = params.sigma_p66
-        P_vel = np.matrix([[sigma_p44**2, 0, 0],[0, sigma_p55**2, 0],[0,0, sigma_p55**2]])
+        P_vel = np.matrix([[sigma_p44**2, 0, 0],[0, sigma_p66**2, 0],[0,0, sigma_p55**2]])
 
         # overall covariance initialization
         self.P = np.zeros((6,6))
