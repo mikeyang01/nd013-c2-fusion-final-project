@@ -133,10 +133,8 @@ Parts of this project are based on the following repositories:
 Please use this starter template to answer the following questions:
 
 ### 1. Write a short recap of the four tracking steps and what you implemented there (filter, track management, association, camera fusion). Which results did you achieve? Which part of the project was most difficult for you to complete, and why?
-#### Short recap:
 
-
-### Project Instructions Step 1
+#### Project Instructions Step 1
 The 1st step of this project is to implement an EKF to track a single real-world target with lidar measurement input over time.
 In file loop_over_dataset.py, I set the attributes for code execution in the following way:
 ```
@@ -153,7 +151,7 @@ The RMSE plot shows a mean RMSE of 0.28.
 <img src="img/result.png"/>
 
 
-### Project Instructions Step 2
+#### Project Instructions Step 2
 The 2nd step of this project is to implement the track management to initialize and delete tracks; then, set a track state and a track score.
 
 In file loop_over_dataset.py, I set the attributes for code execution in the following way:
@@ -168,7 +166,7 @@ Result:
 There is one single track without track losses in between, so the RMSE plot showed a single line. 
 <img src="img/rmse_line.png"/>
 
-### Project Instructions Step 3
+#### Project Instructions Step 3
 The 3rd step of this project is to implement a single nearest neighbor data association to associate measurements to tracks. 
 
 In file loop_over_dataset.py, I set the attributes for code execution in the following way:
@@ -182,7 +180,7 @@ The association works properly, multiple tracks are updated with multiple measur
 <img src="img/multi_tracking_rmse.png"/>
 <img src="img/multi_tracking_result.png"/>
 
-### Project Instructions Step 4
+#### Project Instructions Step 4
 In Step 4 of the final project, I implemented the nonlinear camera measurement model. 
 
 In file loop_over_dataset.py, I set the attributes for code execution in the following way:
