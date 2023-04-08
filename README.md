@@ -130,6 +130,11 @@ Parts of this project are based on the following repositories:
 
 
 ## Writeup: Final Project: Sensor Fusion and Object Tracking
+Please use this starter template to answer the following questions:
+
+### 1. Write a short recap of the four tracking steps and what you implemented there (filter, track management, association, camera fusion). Which results did you achieve? Which part of the project was most difficult for you to complete, and why?
+#### Short recap:
+
 
 ### Project Instructions Step 1
 The 1st step of this project is to implement an EKF to track a single real-world target with lidar measurement input over time.
@@ -193,3 +198,19 @@ Result:
 6. The mean RMSE for these tracks were below 0.25.
 <img src="img/none_linear_rmse.png"/>
 <img src="img/none_linear_result.png"/>
+
+Difficulties: <br>
+In the beginning , the mean RMSE are not below 0.25, and sometimes there are ghost tracks and track loss in the graph.
+It also take me some time to set the configuration parameters for object detection(configs_det).
+
+### 2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)? 
+1. Data noise can be reduced by averaging two uncorrelated sensors.
+2. Camera-lidar fusion can increase coverage. One camera can only see a limit area of the environment, but the lidar can see much wider area than camera. Camera-lidar fusion can create a more wider and accurate results.
+
+### 3. Which challenges will a sensor fusion system face in real-life scenarios? Did you see any of these challenges in the project?
+1. The dataset for testing and training is made in daytime, which has a good sunshine. At night, our system may face Challenges due to the less light.
+2. In real-life scenarios, the weather condition has many types, such as froggy, rainy, snowy. This can impact lidar and camera a lot.
+
+### 4. Can you think of ways to improve your tracking results in the future?
+1. Use larger dataset: A bigger dataset can cover more conditions in the real-life which may lead a better results
+2. Implement more advanced framework such as YOLOv8, a NEW cutting-edge, state-of-the-art model.
